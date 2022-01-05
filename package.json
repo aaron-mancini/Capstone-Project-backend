@@ -1,0 +1,19 @@
+{
+  "name": "capstone-project-backend",
+  "version": "1.0.0",
+  "description": "backend for my capstone project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aaron-mancini/Capstone-Project-backend.git"
+  },
+  "author": "Aaron Mancini",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aaron-mancini/Capstone-Project-backend/issues"
+  },
+  "homepage": "https://github.com/aaron-mancini/Capstone-Project-backend#readme"
+}
