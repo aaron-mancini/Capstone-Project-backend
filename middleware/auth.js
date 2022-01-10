@@ -1,6 +1,6 @@
 "use strict";
 
-const jwt = require("jsonwebntoken");
+const jwt = require("jsonwebtoken");
 const { SECRET_KEY } = require("../config");
 const { UnauthorizedError } = require("../expressError");
 
