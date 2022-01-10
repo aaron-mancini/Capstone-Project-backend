@@ -13,8 +13,10 @@ class Movie {
 
     static async get(movietitle) {
         const ombdRes = await axios.get(`${BASE_URL}?t=${movietitle}&apikey=${API_KEY}`);
+        
+        const movie = ombdRes.data;
 
-        return ombdRes;
+        return movie;
     }
 }
 
