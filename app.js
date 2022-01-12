@@ -9,11 +9,13 @@ const userRoutes = require("./routes/users");
 const movieRoutes = require("./routes/movies");
 const authRoutes = require("./routes/auth");
 const reviewRoutes = require("./routes/reviews");
+const { authenticateJWT } = require("./middleware/auth");
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(authenticateJWT);
 
 app.use("/users", userRoutes); 
 app.use("/movies", movieRoutes);
