@@ -6,6 +6,8 @@ const router = new express.Router();
 const { createToken } = require("../helpers/tokens");
 const userAuthSchema = require("../schemas/userAuth.json");
 const { BadRequestError } = require("../expressError");
+const jwt = require("jsonwebtoken");
+const jsonschema = require("jsonschema");
 
 router.post("/token", async function (req, res, next) {
     try {
@@ -19,6 +21,19 @@ router.post("/token", async function (req, res, next) {
         const user = await User.authenticate(username, password);
         const token = createToken(user);
         return res.json({ token });
+    } catch (error) {
+        return next(error);
+    }
+});
+
+router.post("/decode", async function (req, res, next) {
+    try {
+        console.log(req.body);
+        let token = req.body.token;
+        console.log(token);
+        let { username } = jwt.decode(token);
+        console.log(username);
+        return res.json({ username });
     } catch (error) {
         return next(error);
     }
