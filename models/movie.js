@@ -18,6 +18,12 @@ class Movie {
 
         return movie;
     }
+
+    static async search(term) {
+        const ombdRes = await axios.get(`${BASE_URL}?s=${term}&apikey=${API_KEY}`);
+        const list = ombdRes.data;
+        return list;
+    }
 }
 
 module.exports = Movie;

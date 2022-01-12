@@ -11,13 +11,27 @@ const router = express.Router();
  *  Look up a movie by title.
  */
 
-router.get("/:movietitle", async function (req, res, next) {
+ router.get("/:movietitle", async function (req, res, next) {
     try {
         const movie = await Movie.get(req.params.movietitle);
         return res.json({ movie });
     } catch (error) {
         return next(error);
     }
-})
+});
+
+/** GET /search/[term]
+ * 
+ *  Query API to get list of movies related to search term
+ */
+
+router.get("/search/:term", async function (req, res, next) {
+    try {
+        const movie = await Movie.search(req.params.term);
+        return res.json({ movie });
+    } catch (error) {
+        return next(error);
+    }
+});
 
 module.exports = router;
