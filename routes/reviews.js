@@ -44,11 +44,11 @@ router.get("/:movieId", async function(req, res, next) {
     }
 });
 
-/** GET all reviews by a username /[username]
+/** GET all reviews by a username /user/[username]
  * 
  */
 
- router.get("/:username", async function(req, res, next) {
+ router.get("/user/:username", async function(req, res, next) {
     try {
         const reviews = await Review.getReviewsByUser(req.params.username);
         return res.json({ reviews });
@@ -56,6 +56,17 @@ router.get("/:movieId", async function(req, res, next) {
         return next(error);
     }
 });
+
+/** GET one review by Id /id/[id]*/
+
+router.get("/id/:id", async function(req, res, next) {
+    try {
+        const review = await Review.get(req.params.id);
+        return res.json({ review });
+    } catch (error) {
+        return next(error);
+    }
+})
 
 /** PATCH /[username]/[movieId] 
  * 
@@ -82,9 +93,9 @@ router.patch("/:username/:movieId", async function(req, res, next) {
  *  Delete a review
 */
 
-router.delete("/:username/:movieId", async function(req, res, next) {
+router.delete("/:id", async function(req, res, next) {
     try {
-        await Review.remove(req.params.movieId, req.params.username);
+        await Review.remove(req.params.id);
         return res.json({ deleted: "Review" });
     } catch (error) {
         return next(error);
