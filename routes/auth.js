@@ -26,11 +26,12 @@ router.post("/token", async function (req, res, next) {
     }
 });
 
+/** Decode a token. This is used on the front end. Backend handles decoding because jwt has issues with webpack v5 */
+
 router.post("/decode", async function (req, res, next) {
     try {
         let token = req.body.token;
         let { username } = jwt.decode(token);
-        console.log(username);
         return res.json({ username });
     } catch (error) {
         return next(error);

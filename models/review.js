@@ -33,7 +33,7 @@ class Review {
               rating,
               user_username)
               VALUES ($1, $2, $3, $4)
-              RETURNING movie_id, review_text, rating, user_username`,
+              RETURNING movie_id AS "movieId", review_text AS "review", rating, user_username AS "username"`,
             [movieId, review, rating, username]
         );
 
@@ -96,6 +96,8 @@ class Review {
             [id]
         );
         const review = results.rows[0];
+
+        if (!review) throw new NotFoundError(`No review`);
 
         return review;
     }

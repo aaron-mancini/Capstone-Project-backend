@@ -24,7 +24,7 @@ router.post("/", async function(req, res, next) {
             throw new BadRequestError(errors);
         }
 
-        const review = Review.create(req.body);
+        const review = await Review.create(req.body);
         return res.status(201).json({ review });
     } catch (error) {
         return next(error);
