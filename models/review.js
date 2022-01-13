@@ -6,6 +6,7 @@ const {
     BadRequestError,
     UnauthorizedError,
 } = require("../expressError");
+const { sqlForPartialUpdate } = require("../helpers/sql");
 
 class Review {
     /** Create a review
@@ -79,6 +80,44 @@ class Review {
         const reviews = results.rows;
         
         return reviews;
+    }
+
+    /** Update a Review */
+
+    static async update(movieId, username, data) {
+        const { setCols, values } = sqlForPartialUpdate(data);
+
+        const movieIDVarIdx = "$" + (values.length + 1);
+        const usernameVarIdx = "$" + (values.length + 2);
+
+        const querySql = `UPDATE reviews
+                        SET ${setCols}
+                        WHERE movie_id = ${movieIDVarIdx} AND user_username = ${usernameVarIdx}
+                        RETURNING movie_id,
+                                  review_text,
+                                  rating,
+                                  user_username`;
+        const result = await db.query(querySql, [...values, movieId, username]);
+        const review = result.rows[0];
+
+        if (!review) throw new NotFoundError(`No review`);
+
+        return review;
+    }
+
+    /** Delete a review */
+
+    static async remove(movieId, username) {
+        let result = await db.query(
+            `DELETE
+             FROM reviews
+             WHERE movie_id = $1 AND user_username = $2
+             RETURNING user_username`,
+            [movieId, username],
+        );
+        const review = result.rows[0];
+
+        if (!review) throw new NotFoundError(`No review found`);
     }
 }
 
