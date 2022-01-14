@@ -31,27 +31,33 @@ async function commonBeforeAll() {
     password: "password3",
   });
 
-  await Review.create(
-      {
-        movieId: "mid123",
-        username: "u1",
-        review: "This is a new review",
-        rating: "10",
-      });
-  await Review.create(
-      {
-        movieId: "mid1234",
-        username: "u2",
-        review: "This is a new review",
-        rating: "10",
-      });
-  await Review.create(
-      {
-        movieId: "mid12345",
-        username: "u3",
-        review: "This is a new review",
-        rating: "10",
-      });
+//   await Review.create(
+//       {
+//         movieId: "mid123",
+//         username: "u1",
+//         review: "This is a new review",
+//         rating: "10",
+//       });
+//   await Review.create(
+//       {
+//         movieId: "mid1234",
+//         username: "u2",
+//         review: "This is a new review",
+//         rating: "10",
+//       });
+//   await Review.create(
+//       {
+//         movieId: "mid12345",
+//         username: "u3",
+//         review: "This is a new review",
+//         rating: "10",
+//       });
+
+  await db.query(`
+  INSERT INTO reviews(id, movie_id, review_text, rating, user_username)
+  VALUES (1, 'm1', 'R1', 1, 'u1'),
+         (2, 'm1', 'R2', 2, 'u2'),
+         (3, 'm2', 'R3', 3, 'u2')`);
 }
 
 async function commonBeforeEach() {

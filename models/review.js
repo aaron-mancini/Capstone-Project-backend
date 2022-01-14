@@ -56,6 +56,8 @@ class Review {
              WHERE movie_id = $1`,
             [movieId]
         );
+        
+        console.log(results.rows);
 
         const reviews = results.rows;
         

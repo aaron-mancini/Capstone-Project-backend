@@ -5,6 +5,7 @@ const express = require("express");
 const Review = require("../models/review");
 const newReviewSchema = require("../schemas/newReview.json");
 const updateReviewSchema = require("../schemas/updateReview.json");
+const { ensureCorrectUser } = require("../middleware/auth");
 const jsonschema = require("jsonschema");
 const { BadRequestError } = require("../expressError");
 
@@ -37,7 +38,9 @@ router.post("/", async function(req, res, next) {
 
 router.get("/:movieId", async function(req, res, next) {
     try {
+        console.log("Id:::::::", req.params.movieId);
         const reviews = await Review.getReviewsforMovie(req.params.movieId);
+        console.log("Reviews::::::::", reviews);
         return res.json({ reviews });
     } catch (error) {
         return next(error);
@@ -73,7 +76,7 @@ router.get("/id/:id", async function(req, res, next) {
  *  Update a user review
 */
 
-router.patch("/:username/:movieId", async function(req, res, next) {
+router.patch("/:username/:movieId", ensureCorrectUser, async function(req, res, next) {
     try {
         const validator = jsonschema.validate(req.body, updateReviewSchema);
         if (!validator.valid) {
@@ -93,7 +96,7 @@ router.patch("/:username/:movieId", async function(req, res, next) {
  *  Delete a review
 */
 
-router.delete("/:id", async function(req, res, next) {
+router.delete("/:id", ensureCorrectUser, async function(req, res, next) {
     try {
         await Review.remove(req.params.id);
         return res.json({ deleted: "Review" });
