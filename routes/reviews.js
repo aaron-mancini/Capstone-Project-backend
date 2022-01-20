@@ -5,9 +5,9 @@ const express = require("express");
 const Review = require("../models/review");
 const newReviewSchema = require("../schemas/newReview.json");
 const updateReviewSchema = require("../schemas/updateReview.json");
-const { ensureCorrectUser } = require("../middleware/auth");
+const { ensureUser } = require("../middleware/auth");
 const jsonschema = require("jsonschema");
-const { BadRequestError } = require("../expressError");
+const { BadRequestError, UnauthorizedError } = require("../expressError");
 
 
 const router = express.Router();
@@ -17,7 +17,7 @@ const router = express.Router();
  *  Create a new review
  */
 
-router.post("/", async function(req, res, next) {
+router.post("/", ensureUser, async function(req, res, next) {
     try {
         const validator = jsonschema.validate(req.body, newReviewSchema);
         if(!validator.valid) {
@@ -76,15 +76,17 @@ router.get("/id/:id", async function(req, res, next) {
  *  Update a user review
 */
 
-router.patch("/:username/:movieId", ensureCorrectUser, async function(req, res, next) {
+router.patch("/:id", ensureUser, async function(req, res, next) {
     try {
+        let currUser = res.locals.user;
+
         const validator = jsonschema.validate(req.body, updateReviewSchema);
         if (!validator.valid) {
             const errors = validator.errors.map(e => e.stack);
             throw new BadRequestError(errors);
         }
 
-        const review = await Review.update(req.params.movieId, req.params.username, req.body);
+        const review = await Review.update(req.params.id, currUser.username, req.body);
         return res.json({ review });
     } catch (error) {
         return next(error);
@@ -96,8 +98,14 @@ router.patch("/:username/:movieId", ensureCorrectUser, async function(req, res, 
  *  Delete a review
 */
 
-router.delete("/:id", ensureCorrectUser, async function(req, res, next) {
+router.delete("/:id", ensureUser, async function(req, res, next) {
     try {
+        let user = res.locals.user;
+        // query review by id
+        let review = await Review.get(req.params.id);
+        // check if username matches locals
+        if (review.username !== user.username) throw new UnauthorizedError();
+
         await Review.remove(req.params.id);
         return res.json({ deleted: "Review" });
     } catch (error) {

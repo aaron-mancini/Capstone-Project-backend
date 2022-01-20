@@ -4,16 +4,15 @@ const jwt = require("jsonwebtoken");
 const { SECRET_KEY } = require("../config");
 const { UnauthorizedError } = require("../expressError");
 
-/** Middleware is used to ensure a user logged in and must
- *  be the matching user to the username in the route param.
+/** Middleware is used to ensure a user logged in
  * 
  */
 
-function ensureCorrectUser (req, res, next) {
+function ensureUser (req, res, next) {
     try {
         const user = res.locals.user;
 
-        if (!(user && user.username === req.params.username)) {
+        if (!(user)) {
             throw new UnauthorizedError();
         }
         return next();
@@ -36,6 +35,6 @@ function authenticateJWT(req, res, next) {
 }
 
 module.exports = {
-    ensureCorrectUser,
+    ensureUser,
     authenticateJWT,
 }
