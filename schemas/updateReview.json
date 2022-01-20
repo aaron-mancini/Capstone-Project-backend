@@ -17,7 +17,7 @@
         },
         "rating": {
             "$id": "#/properties/rating",
-            "type": "string",
+            "type": "integer",
             "title": "The rating schema",
             "description": "An explanation about the purpose of this instance.",
             "default": ""

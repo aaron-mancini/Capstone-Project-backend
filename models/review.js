@@ -33,7 +33,7 @@ class Review {
               rating,
               user_username)
               VALUES ($1, $2, $3, $4)
-              RETURNING movie_id AS "movieId", review_text AS "review", rating, user_username AS "username"`,
+              RETURNING id, movie_id AS "movieId", review_text AS "review", rating, user_username AS "username"`,
             [movieId, review, rating, username]
         );
 
