@@ -13,7 +13,7 @@ class Review {
      * 
      */
 
-    static async create({ movieId, username, review, rating }) {
+    static async create({ movieId, username, review, rating, title }) {
         const duplicateCheck = await db.query(
             `SELECT user_username,
                     movie_id
@@ -29,12 +29,13 @@ class Review {
         const result = await db.query(
             `INSERT INTO reviews
              (movie_id,
+              movie_title,
               review_text,
               rating,
               user_username)
-              VALUES ($1, $2, $3, $4)
-              RETURNING id, movie_id AS "movieId", review_text AS "review", rating, user_username AS "username"`,
-            [movieId, review, rating, username]
+              VALUES ($1, $2, $3, $4, $5)
+              RETURNING id, movie_id AS "movieId", movie_title AS "title", review_text AS "review", rating, user_username AS "username"`,
+            [movieId, title, review, rating, username]
         );
 
         const userReview = result.rows[0];
@@ -49,6 +50,7 @@ class Review {
     static async getReviewsforMovie(movieId) {
         const results = await db.query(
             `SELECT movie_id,
+                    movie_title AS "title",
                     review_text AS "review",
                     rating,
                     user_username AS "username"
@@ -72,6 +74,7 @@ class Review {
         const results = await db.query(
             `SELECT id,
                     movie_id,
+                    movie_title AS "title",
                     review_text AS "review",
                     rating,
                     user_username AS "username"
@@ -90,6 +93,7 @@ class Review {
         const results = await db.query(
             `SELECT id,
                     movie_id,
+                    movie_title AS "title",
                     review_text AS "review",
                     rating,
                     user_username AS "username"
@@ -116,6 +120,7 @@ class Review {
                         SET ${setCols}
                         WHERE movie_id = ${movieIDVarIdx} AND user_username = ${usernameVarIdx}
                         RETURNING movie_id,
+                                  movie_title,
                                   review_text,
                                   rating,
                                   user_username`;

@@ -11,6 +11,7 @@ CREATE TABLE users (
 CREATE TABLE reviews (
     id SERIAL PRIMARY KEY,
     movie_id TEXT NOT NULL,
+    movie_title TEXT NOT NULL,
     review_text TEXT NOT NULL,
     rating INT NOT NULL,
     date_created DATE DEFAULT CURRENT_TIMESTAMP,
