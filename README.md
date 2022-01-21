@@ -3,6 +3,8 @@
 FilmRate is a web app that allows users to view film and tv show information from the obdb API. Users
 can also make and account and write their own review for any film.
 
+Link to Frontend - https://github.com/aaron-mancini/movies-frontend
+
 Movie API - OMDBAPI - http://www.omdbapi.com/
 
 ## Features
