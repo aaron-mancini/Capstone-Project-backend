@@ -7,6 +7,7 @@ const { DB_URI } = process.env.DATABASE_URL || require("./key");
 const SECRET_KEY = process.env.SECRET_KEY || "secret-dev";
 
 const API_KEY = process.env.API_KEY
+// const { API_KEY } = require("./key");
 
 const PORT = +process.env.PORT || 3001;
 

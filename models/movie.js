@@ -20,7 +20,6 @@ class Movie {
     }
 
     static async search(term) {
-        console.log("API URL::::::", `${BASE_URL}?s=${term}&apikey=${API_KEY}`)
         const ombdRes = await axios.get(`${BASE_URL}?s=${term}&apikey=${API_KEY}`);
         const list = ombdRes.data;
         return list;
