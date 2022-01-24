@@ -67,51 +67,13 @@ describe("POST /users", function () {
   });
 });
 
-/** GET /users */
+/** GET /users/ */
 
 describe("GET /users", function () {
-    test("works", async function () {
-      const resp = await request(app)
-          .get("/users")
-      expect(resp.body).toEqual({
-        users: [
-          {
-            username: "u1",
-            firstName: "U1F",
-            lastName: "U1L",
-            email: "user1@user.com",
-          },
-          {
-            username: "u2",
-            firstName: "U2F",
-            lastName: "U2L",
-            email: "user2@user.com",
-          },
-          {
-            username: "u3",
-            firstName: "U3F",
-            lastName: "U3L",
-            email: "user3@user.com",
-          },
-        ],
-      });
-    });
-  
-    test("fails: test next() handler", async function () {
-      await db.query("DROP TABLE users CASCADE");
-      const resp = await request(app)
-          .get("/users")
-      expect(resp.statusCode).toEqual(500);
-    });
-});
-
-/** GET /users/:username */
-
-describe("GET /users/:username", function () {
   
     test("works for same user", async function () {
       const resp = await request(app)
-          .get(`/users/u1`)
+          .get(`/users`)
           .set("authorization", `Bearer ${u1Token}`);
       expect(resp.body).toEqual({
         user: {
@@ -123,27 +85,20 @@ describe("GET /users/:username", function () {
       });
     });
   
-    test("unauth for other users", async function () {
-      const resp = await request(app)
-          .get(`/users/u1`)
-          .set("authorization", `Bearer ${u2Token}`);
-      expect(resp.statusCode).toEqual(401);
-    });
-  
     test("unauth for anon", async function () {
       const resp = await request(app)
-          .get(`/users/u1`);
+          .get(`/users`);
       expect(resp.statusCode).toEqual(401);
     });
 });
 
-/** PATCH /users/:username */
+/** PATCH /users */
 
-describe("PATCH /users/:username", () => {
+describe("PATCH /users", () => {
   
     test("works for same user", async function () {
       const resp = await request(app)
-          .patch(`/users/u1`)
+          .patch(`/users`)
           .send({
             firstName: "New",
           })
@@ -158,19 +113,9 @@ describe("PATCH /users/:username", () => {
       });
     });
   
-    test("unauth if not same user", async function () {
-      const resp = await request(app)
-          .patch(`/users/u1`)
-          .send({
-            firstName: "New",
-          })
-          .set("authorization", `Bearer ${u2Token}`);
-      expect(resp.statusCode).toEqual(401);
-    });
-  
     test("unauth for anon", async function () {
       const resp = await request(app)
-          .patch(`/users/u1`)
+          .patch(`/users`)
           .send({
             firstName: "New",
           });
@@ -179,7 +124,7 @@ describe("PATCH /users/:username", () => {
   
     test("bad request if invalid data", async function () {
       const resp = await request(app)
-          .patch(`/users/u1`)
+          .patch(`/users`)
           .send({
             firstName: 42,
           })
@@ -189,7 +134,7 @@ describe("PATCH /users/:username", () => {
   
     test("works: can set new password", async function () {
       const resp = await request(app)
-          .patch(`/users/u1`)
+          .patch(`/users`)
           .send({
             password: "new-password",
           })
@@ -213,21 +158,14 @@ describe("DELETE /users/:username", function () {
   
     test("works for same user", async function () {
       const resp = await request(app)
-          .delete(`/users/u1`)
+          .delete(`/users`)
           .set("authorization", `Bearer ${u1Token}`);
       expect(resp.body).toEqual({ deleted: "u1" });
     });
   
-    test("unauth if not same user", async function () {
-      const resp = await request(app)
-          .delete(`/users/u1`)
-          .set("authorization", `Bearer ${u2Token}`);
-      expect(resp.statusCode).toEqual(401);
-    });
-  
     test("unauth for anon", async function () {
       const resp = await request(app)
-          .delete(`/users/u1`);
+          .delete(`/users`);
       expect(resp.statusCode).toEqual(401);
     });
 });

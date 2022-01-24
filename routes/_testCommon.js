@@ -54,10 +54,10 @@ async function commonBeforeAll() {
 //       });
 
   await db.query(`
-  INSERT INTO reviews(id, movie_id, review_text, rating, user_username)
-  VALUES (1, 'm1', 'R1', 1, 'u1'),
-         (2, 'm1', 'R2', 2, 'u2'),
-         (3, 'm2', 'R3', 3, 'u2')`);
+  INSERT INTO reviews(id, movie_id, movie_title, review_text, rating, user_username)
+  VALUES (1, 'm1', 'mt1', 'R1', 1, 'u1'),
+         (2, 'm1', 'mt2', 'R2', 2, 'u2'),
+         (3, 'm2', 'mt3', 'R3', 3, 'u2')`);
 }
 
 async function commonBeforeEach() {

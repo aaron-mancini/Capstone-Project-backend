@@ -38,9 +38,7 @@ router.post("/", ensureUser, async function(req, res, next) {
 
 router.get("/:movieId", async function(req, res, next) {
     try {
-        console.log("Id:::::::", req.params.movieId);
         const reviews = await Review.getReviewsforMovie(req.params.movieId);
-        console.log("Reviews::::::::", reviews);
         return res.json({ reviews });
     } catch (error) {
         return next(error);

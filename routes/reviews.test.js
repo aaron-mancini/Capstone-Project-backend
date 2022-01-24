@@ -4,7 +4,6 @@ const request = require("supertest");
 
 const db = require("../db.js");
 const app = require("../app");
-const User = require("../models/user");
 
 const {
   commonBeforeAll,
@@ -28,14 +27,18 @@ describe("POST /reviews", function () {
           .post("/reviews")
           .send({
             movieId: "new123",
+            title: "newtitle",
             username: "u1",
             review: "This is a new review",
             rating: "5",
           })
+          .set("authorization", `Bearer ${u1Token}`);
       expect(resp.statusCode).toEqual(201);
       expect(resp.body).toEqual({
         review: {
+            id: expect.any(Number),
             movieId: "new123",
+            title: "newtitle",
             username: "u1",
             review: "This is a new review",
             rating: 5,
@@ -49,6 +52,7 @@ describe("POST /reviews", function () {
           .send({
             movieId: "new123",
           })
+          .set("authorization", `Bearer ${u1Token}`);
       expect(resp.statusCode).toEqual(400);
     });
   
@@ -61,6 +65,7 @@ describe("POST /reviews", function () {
             review: 123,
             rating: "5",
           })
+          .set("authorization", `Bearer ${u1Token}`);
       expect(resp.statusCode).toEqual(400);
     });
 });
@@ -75,12 +80,14 @@ describe("GET /reviews/:movieId", function () {
         reviews: [
           {
             movie_id: "m1",
+            title: "mt1",
             username: "u1",
             review: "R1",
             rating: 1,
           },
           {
             movie_id: "m1",
+            title: "mt2",
             username: "u2",
             review: "R2",
             rating: 2,
@@ -108,6 +115,7 @@ describe("GET /reviews/user/:username", function () {
           {
             id: 2,
             movie_id: "m1",
+            title: "mt2",
             username: "u2",
             review: "R2",
             rating: 2,
@@ -115,6 +123,7 @@ describe("GET /reviews/user/:username", function () {
           {
             id: 3,
             movie_id: "m2",
+            title: "mt3",
             username: "u2",
             review: "R3",
             rating: 3,
@@ -142,6 +151,7 @@ describe("GET /reviews/id/:id", function () {
           {
             id: 2,
             movie_id: "m1",
+            title: "mt2",
             username: "u2",
             review: "R2",
             rating: 2,
@@ -157,13 +167,13 @@ describe("GET /reviews/id/:id", function () {
     });
 });
 
-/** PATCH /reviews/:username/:movieId */
+/** PATCH /reviews/:id */
 
-describe("PATCH /reviews/:username/:movieId", () => {
+describe("PATCH /reviews/:id", () => {
   
     test("works for correct user", async function () {
       const resp = await request(app)
-          .patch(`/reviews/u1/m1`)
+          .patch(`/reviews/m1`)
           .send({
             review_text: "New review",
           })
@@ -171,6 +181,7 @@ describe("PATCH /reviews/:username/:movieId", () => {
       expect(resp.body).toEqual({
         review: {
             movie_id: "m1",
+            movie_title: "mt1",
             user_username: "u1",
             review_text: "New review",
             rating: 1,
@@ -178,19 +189,9 @@ describe("PATCH /reviews/:username/:movieId", () => {
       });
     });
   
-    test("unauth if not same user", async function () {
-      const resp = await request(app)
-          .patch(`/reviews/u1/m1`)
-          .send({
-            review: "New review",
-          })
-          .set("authorization", `Bearer ${u2Token}`);
-      expect(resp.statusCode).toEqual(401);
-    });
-  
     test("unauth for anon", async function () {
       const resp = await request(app)
-          .patch(`/reviews/u1/m1`)
+          .patch(`/reviews/m1`)
           .send({
             review: "New Review",
           });
@@ -199,7 +200,7 @@ describe("PATCH /reviews/:username/:movieId", () => {
   
     test("bad request if invalid data", async function () {
       const resp = await request(app)
-          .patch(`/reviews/u1/m1`)
+          .patch(`/reviews/m1`)
           .send({
             review: 42,
           })

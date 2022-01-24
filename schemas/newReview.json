@@ -17,7 +17,7 @@
             "description": "An explanation about the purpose of this instance.",
             "default": "",
             "minLength": 1,
-            "maxLength": 300
+            "maxLength": 500
         },
         "rating": {
             "$id": "#/properties/rating",

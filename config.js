@@ -1,7 +1,7 @@
 "use strict";
 
-// require("dotenv").config();
-// require("colors");
+require("dotenv").config();
+
 const { DB_URI } = require("./key");
 
 const SECRET_KEY = process.env.SECRET_KEY || "secret-dev";

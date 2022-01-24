@@ -23,6 +23,7 @@ afterAll(commonAfterAll);
 describe("create", function () {
     const newReview = {
         movieId: "mid1234",
+        title: "mt1234",
         username: "u1",
         review: "This is a new review",
         rating: 10,
@@ -30,7 +31,14 @@ describe("create", function () {
 
     test("works", async function () {
         let review = await Review.create(newReview);
-        expect(review).toEqual(newReview);
+        expect(review).toEqual({
+          id: expect.any(Number),
+          movieId: "mid1234",
+          title: "mt1234",
+          username: "u1",
+          review: "This is a new review",
+          rating: 10,
+      });
         const found = await db.query("SELECT * FROM reviews WHERE user_username = 'u1' AND movie_id = 'mid1234'");
         expect(found.rows.length).toEqual(1);
     });
@@ -54,12 +62,14 @@ describe("getReviewsForMovie", function () {
       expect(reviews).toEqual([
         {
           movie_id: "m1",
+          title: "mt1",
           review: "R1",
           rating: 1,
           username: "u1",
         },
         {
           movie_id: "m1",
+          title: "mt2",
           review: "R2",
           rating: 2,
           username: "u2",
@@ -77,6 +87,7 @@ describe("getReviewsByUser", function () {
         {
           id: expect.any(Number),
           movie_id: "m1",
+          title: "mt2",
           review: "R2",
           rating: 2,
           username: "u2",
@@ -84,6 +95,7 @@ describe("getReviewsByUser", function () {
         {
           id: expect.any(Number),
           movie_id: "m2",
+          title: "mt3",
           review: "R3",
           rating: 3,
           username: "u2",
@@ -100,6 +112,7 @@ describe("get", function () {
       expect(review).toEqual({
         id: 1,
         movie_id: "m1",
+        title: "mt1",
         review: "R1",
         rating: 1,
         username: "u1",
@@ -129,20 +142,11 @@ describe("update", function () {
       expect(review).toEqual({
         user_username: "u1",
         movie_id: "m1",
+        movie_title: "mt1",
         ...updateData,
       });
     });
-  
-    test("not found if no such review", async function () {
-      try {
-        await Review.update("notmovieId", "notu1", {
-          review: "NewReview",
-        });
-        fail();
-      } catch (err) {
-        expect(err instanceof NotFoundError).toBeTruthy();
-      }
-    });
+
   
     test("bad request if no data", async function () {
       expect.assertions(1);

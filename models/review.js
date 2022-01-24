@@ -58,8 +58,6 @@ class Review {
              WHERE movie_id = $1`,
             [movieId]
         );
-        
-        console.log(results.rows);
 
         const reviews = results.rows;
         
@@ -112,7 +110,7 @@ class Review {
 
     static async update(movieId, username, data) {
         const { setCols, values } = sqlForPartialUpdate(data, {});
-
+        
         const movieIDVarIdx = "$" + (values.length + 1);
         const usernameVarIdx = "$" + (values.length + 2);
 

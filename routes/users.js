@@ -64,7 +64,7 @@ router.get("/", ensureUser, async function (req, res, next) {
     }
 });
 
-/** PATCH /[username]
+/** PATCH /
  * 
  *  update a user
  */
@@ -85,7 +85,7 @@ router.patch("/", ensureUser, async function (req, res, next) {
     }
 });
 
-/** DELETE /[username]
+/** DELETE /
  * 
  */
 
@@ -93,7 +93,7 @@ router.delete("/", ensureUser, async function (req, res, next) {
     try {
         let currUser = res.locals.user
         await User.remove(currUser.username);
-        return res.json({ deleted: req.params.username });
+        return res.json({ deleted: currUser.username });
     } catch (error) {
         return next(error);
     }
