@@ -2,7 +2,7 @@
 
 require("dotenv").config();
 
-const { DB_URI } = require("./key");
+const { DB_URI } = process.env.DATABASE_URL || require("./key");
 
 const SECRET_KEY = process.env.SECRET_KEY || "secret-dev";
 
