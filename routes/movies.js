@@ -11,9 +11,9 @@ const router = express.Router();
  *  Look up a movie by title.
  */
 
- router.get("/:movietitle", async function (req, res, next) {
+ router.get("/:year/:movietitle", async function (req, res, next) {
     try {
-        const movie = await Movie.get(req.params.movietitle);
+        const movie = await Movie.get(req.params.movietitle, req.params.year);
         return res.json({ movie });
     } catch (error) {
         return next(error);
@@ -25,9 +25,9 @@ const router = express.Router();
  *  Query API to get list of movies related to search term
  */
 
-router.get("/search/:term", async function (req, res, next) {
+router.get("/", async function (req, res, next) {
     try {
-        const movie = await Movie.search(req.params.term);
+        const movie = await Movie.search(req.query.search);
         return res.json({ movie });
     } catch (error) {
         return next(error);

@@ -11,17 +11,19 @@ class Movie {
      * 
      */
 
-    static async get(movietitle) {
-        const ombdRes = await axios.get(`${BASE_URL}?t=${movietitle}&apikey=${API_KEY}`);
+    static async get(movietitle, year) {
+        const omdbRes = await axios.get(`${BASE_URL}?t=${movietitle}&y=${year}&apikey=${API_KEY}`);
         
-        const movie = ombdRes.data;
+        const movie = omdbRes.data;
+        console.log(movie);
 
         return movie;
     }
 
     static async search(term) {
-        const ombdRes = await axios.get(`${BASE_URL}?s=${term}&apikey=${API_KEY}`);
-        const list = ombdRes.data;
+        const omdbRes = await axios.get(`${BASE_URL}?s=${term}&apikey=${API_KEY}`);
+        const list = omdbRes.data;
+        console.log(list);
         return list;
     }
 }
